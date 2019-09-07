@@ -1,7 +1,8 @@
-package com.smrahmadi.cityguid
+package com.smrahmadi.cityguid.view.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.smrahmadi.cityguid.R
 
 class MainActivity : AppCompatActivity() {
 
