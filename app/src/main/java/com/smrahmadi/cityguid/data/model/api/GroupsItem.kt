@@ -1,11 +1,9 @@
 package com.smrahmadi.cityguid.data.model.api
 
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
 
-@Parcelize
+
 data class GroupsItem(
 
 	@field:SerializedName("name")
@@ -16,4 +14,4 @@ data class GroupsItem(
 
 	@field:SerializedName("items")
 	val items: List<ItemsItem?>? = null
-) : Parcelable
+)

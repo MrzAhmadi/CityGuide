@@ -1,11 +1,9 @@
 package com.smrahmadi.cityguid.data.model.api
 
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
 
-@Parcelize
+
 data class Sw(
 
 	@field:SerializedName("lng")
@@ -13,4 +11,4 @@ data class Sw(
 
 	@field:SerializedName("lat")
 	val lat: Double? = null
-) : Parcelable
+)

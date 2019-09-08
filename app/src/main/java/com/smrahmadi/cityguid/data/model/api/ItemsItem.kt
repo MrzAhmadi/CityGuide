@@ -1,26 +1,26 @@
 package com.smrahmadi.cityguid.data.model.api
 
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
 
 
-@Parcelize
 data class ItemsItem(
 
-	@field:SerializedName("venue")
+    @field:SerializedName("venue")
 	val venue: Venue? = null,
 
-	@field:SerializedName("reasons")
+    @field:SerializedName("reasons")
 	val reasons: Reasons? = null,
 
-	@field:SerializedName("summary")
+    @field:SerializedName("referralId")
+    val referralId: String? = null,
+
+    @field:SerializedName("summary")
 	val summary: String? = null,
 
-	@field:SerializedName("reasonName")
+    @field:SerializedName("reasonName")
 	val reasonName: String? = null,
 
-	@field:SerializedName("type")
+    @field:SerializedName("type")
 	val type: String? = null
-) : Parcelable
+)

@@ -1,11 +1,9 @@
 package com.smrahmadi.cityguid.data.model.api
 
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
 
-@Parcelize
+
 data class SuggestedBounds(
 
 	@field:SerializedName("sw")
@@ -13,4 +11,4 @@ data class SuggestedBounds(
 
 	@field:SerializedName("ne")
 	val ne: Ne? = null
-) : Parcelable
+)
