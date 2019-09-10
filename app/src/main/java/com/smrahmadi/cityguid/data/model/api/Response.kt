@@ -7,29 +7,29 @@ import com.google.gson.annotations.SerializedName
 data class Response(
 
     @field:SerializedName("suggestedFilters")
-    val suggestedFilters: SuggestedFilters? = null,
+    val suggestedFilters: SuggestedFilters,
 
     @field:SerializedName("totalResults")
-	val totalResults: Int? = null,
+    val totalResults: Int,
 
     @field:SerializedName("suggestedRadius")
-	val suggestedRadius: Int? = null,
+    val suggestedRadius: Int,
 
     @field:SerializedName("headerFullLocation")
-	val headerFullLocation: String? = null,
+    val headerFullLocation: String,
 
     @field:SerializedName("warning")
-	val warning: Warning? = null,
+    val warning: Warning,
 
     @field:SerializedName("headerLocationGranularity")
-	val headerLocationGranularity: String? = null,
+    val headerLocationGranularity: String,
 
     @field:SerializedName("groups")
-	val groups: List<GroupsItem?>? = null,
+    val groups: List<GroupsItem?>,
 
     @field:SerializedName("suggestedBounds")
-	val suggestedBounds: SuggestedBounds? = null,
+    val suggestedBounds: SuggestedBounds,
 
     @field:SerializedName("headerLocation")
-	val headerLocation: String? = null
+    val headerLocation: String
 )

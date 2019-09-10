@@ -14,7 +14,7 @@ class ErrorUtils {
             try {
                 error = converter.convert(response.errorBody()!!)
             } catch (e: IOException) {
-                return Data()
+                return null
             }
             return error
         }

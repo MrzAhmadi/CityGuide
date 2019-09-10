@@ -5,8 +5,8 @@ import com.google.gson.annotations.SerializedName
 data class Data(
 
     @field:SerializedName("meta")
-    val meta: Meta? = null,
+    val meta: Meta,
 
     @field:SerializedName("response")
-    val response: Response? = null
+    val response: Response
 )

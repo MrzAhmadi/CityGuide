@@ -6,9 +6,9 @@ import com.google.gson.annotations.SerializedName
 
 data class Reasons(
 
-	@field:SerializedName("count")
-	val count: Int? = null,
+    @field:SerializedName("count")
+    val count: Int,
 
-	@field:SerializedName("items")
-	val items: List<ItemsItem?>? = null
+    @field:SerializedName("items")
+    val items: List<ItemsItem?>
 )

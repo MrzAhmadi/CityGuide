@@ -7,5 +7,5 @@ import com.google.gson.annotations.SerializedName
 data class VenuePage(
 
 	@field:SerializedName("id")
-	val id: String? = null
+    val id: String
 )

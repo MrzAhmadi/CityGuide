@@ -7,14 +7,14 @@ import com.google.gson.annotations.SerializedName
 data class Meta(
 
     @field:SerializedName("code")
-    val code: Int? = null,
+    val code: Int,
 
     @field:SerializedName("errorType")
-    val errorType: String? = null,
+    val errorType: String,
 
     @field:SerializedName("requestId")
-    val requestId: String? = null,
+    val requestId: String,
 
     @field:SerializedName("errorDetail")
-    val errorDetail: String? = null
+    val errorDetail: String
 )

@@ -6,21 +6,21 @@ import com.google.gson.annotations.SerializedName
 
 data class CategoriesItem(
 
-	@field:SerializedName("pluralName")
-	val pluralName: String? = null,
+    @field:SerializedName("pluralName")
+    val pluralName: String,
 
-	@field:SerializedName("name")
-	val name: String? = null,
+    @field:SerializedName("name")
+    val name: String,
 
-	@field:SerializedName("icon")
-	val icon: Icon? = null,
+    @field:SerializedName("icon")
+    val icon: Icon,
 
-	@field:SerializedName("id")
-	val id: String? = null,
+    @field:SerializedName("id")
+    val id: String,
 
-	@field:SerializedName("shortName")
-	val shortName: String? = null,
+    @field:SerializedName("shortName")
+    val shortName: String,
 
-	@field:SerializedName("primary")
-	val primary: Boolean? = null
+    @field:SerializedName("primary")
+    val primary: Boolean
 )

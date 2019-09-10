@@ -7,20 +7,20 @@ import com.google.gson.annotations.SerializedName
 data class ItemsItem(
 
     @field:SerializedName("venue")
-	val venue: Venue? = null,
+    val venue: Venue,
 
     @field:SerializedName("reasons")
-	val reasons: Reasons? = null,
+    val reasons: Reasons,
 
     @field:SerializedName("referralId")
-    val referralId: String? = null,
+    val referralId: String,
 
     @field:SerializedName("summary")
-	val summary: String? = null,
+    val summary: String,
 
     @field:SerializedName("reasonName")
-	val reasonName: String? = null,
+    val reasonName: String,
 
     @field:SerializedName("type")
-	val type: String? = null
+    val type: String
 )
