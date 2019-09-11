@@ -3,4 +3,9 @@
   <string name="name">Name</string>
   <string name="type">Type</string>
   <string name="distance">Distance</string>
+  <string name="ok">OK</string>
+  <string name="no">No</string>
+  <string name="require_permissions">Require permissions</string>
+  <string name="checking_your_location_n_please_wait">Checking your location \n   please
+    wait…</string>
 </resources>

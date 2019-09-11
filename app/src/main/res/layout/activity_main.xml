@@ -8,12 +8,37 @@
     android:layout_height="match_parent"
     tools:context=".view.main.MainActivity">
   
-  <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/list"
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:orientation="vertical"
-      app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-      tools:listitem="@layout/item_location" />
+      android:gravity="center"
+      android:orientation="vertical">
+    
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.ProgressBar" />
+    
+    <TextView
+        android:id="@+id/loadingText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/checking_your_location_n_please_wait"
+        android:textSize="@dimen/titleTextSize"
+        android:textColor="@color/colorTextPrimary"
+        android:textStyle="bold" />
+    
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_location" />
+  
+  </LinearLayout>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

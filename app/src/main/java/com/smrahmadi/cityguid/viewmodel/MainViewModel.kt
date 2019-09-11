@@ -1,5 +1,9 @@
 package com.smrahmadi.cityguid.viewmodel
 
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 import android.util.Log
 import android.widget.AbsListView
 import androidx.lifecycle.Observer
@@ -7,16 +11,21 @@ import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.smrahmadi.cityguid.data.cast.ItemDataCast
 import com.smrahmadi.cityguid.data.repository.FoursquareRepository
+import com.smrahmadi.cityguid.data.repository.LocationRepository
 import com.smrahmadi.cityguid.view.main.MainActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
+
 class MainViewModel(
-    private var view: MainActivity,
-    private var foursquareRepository: FoursquareRepository
+    private var activity: MainActivity,
+    private var foursquareRepository: FoursquareRepository,
+    private var locationRepository: LocationRepository
 ) : ViewModel() {
 
     companion object {
         const val REQUEST_SIZE = 50
+        const val PERMISSIONS_REQUEST_LOCATION = 99
+
     }
 
     private var isScrolling = false
@@ -28,43 +37,69 @@ class MainViewModel(
     private var lastPositionInView = -1
     private var totalItems = 0
 
+    private var location: Location? = null
+    private lateinit var locationRequest: String
+
     init {
         initInfiniteScroll()
     }
 
-    fun setLoading(isLoading: Boolean) {
-        this.isLoading = isLoading
+
+    fun initLocationPermissions() {
+        val permission = android.Manifest.permission.ACCESS_FINE_LOCATION
+        val res = activity.checkCallingOrSelfPermission(permission)
+        if (res == PackageManager.PERMISSION_GRANTED)
+            locationUpdate()
+        else
+            activity.showRequestPermissionsDialog()
+    }
+
+    @SuppressLint("MissingPermission")
+    fun locationUpdate() {
+        val provider = LocationManager.NETWORK_PROVIDER
+        locationRepository.locationManager.requestLocationUpdates(
+            provider,
+            400,
+            1f,
+            locationRepository
+        )
+        locationRepository.getLocationData()!!.observe(activity, Observer {
+            location = it
+            locationRequest = "${location!!.latitude},${location!!.longitude}"
+            getListFrom(0)
+            activity.showList()
+        })
     }
 
     fun getList(
-        ll: String,
         v: String,
         limit: Int,
         offset: Int
     ) {
         foursquareRepository.locations(
-            ll,
+            locationRequest,
             v
             , limit,
             offset
-        ).observe(view, Observer {
+        ).observe(activity, Observer {
 
             if (it.hasException())
-                it.throwable?.message?.let { it1 -> view.showError(it1) }
+                it.throwable?.message?.let { it1 -> activity.showError(it1) }
             else {
                 if (it.data!!.meta.code == 200) {
+                    isLoading = false
                     val groups = it.data.response.groups[0]
-                    view.loadList(ItemDataCast.cast(groups!!.items))
+                    activity.loadList(ItemDataCast.cast(groups!!.items))
                     totalItems = it.data.response.totalResults
-                    view.listItemDecoration.setItemCount(totalItems)
+                    activity.listItemDecoration.setItemCount(totalItems)
                 } else
-                    view.showError(it.data.meta.errorDetail)
+                    activity.showError(it.data.meta.errorDetail)
             }
         })
     }
 
     private fun initInfiniteScroll() {
-        view.list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        activity.list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
@@ -73,9 +108,9 @@ class MainViewModel(
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                currentItems = view.mLayoutManager.childCount
-                totalLoadedItems = view.mLayoutManager.itemCount
-                scrollOutItems = view.mLayoutManager.findFirstVisibleItemPosition()
+                currentItems = activity.mLayoutManager.childCount
+                totalLoadedItems = activity.mLayoutManager.itemCount
+                scrollOutItems = activity.mLayoutManager.findFirstVisibleItemPosition()
                 positionInScroll = currentItems + scrollOutItems
 
                 if (!isLoading &&
@@ -84,13 +119,8 @@ class MainViewModel(
                     totalLoadedItems < totalItems
                 ) {
                     isScrolling = false
-                    view.adapter.addLoading()
-                    getList(
-                        "40.74224,-73.99386",
-                        "20190910",
-                        REQUEST_SIZE,
-                        totalLoadedItems
-                    )
+                    activity.adapter.addLoading()
+                    getListFrom(totalLoadedItems)
                 }
 
                 if (isScrolling && !isLoading && lastPositionInView != positionInScroll) {
@@ -104,4 +134,15 @@ class MainViewModel(
             }
         })
     }
+
+    fun getListFrom(offset: Int) {
+        isLoading = true
+        getList(
+            "20190910",
+            REQUEST_SIZE,
+            offset
+        )
+    }
+
+
 }
