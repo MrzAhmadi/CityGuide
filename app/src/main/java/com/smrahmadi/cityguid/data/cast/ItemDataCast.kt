@@ -21,8 +21,10 @@ class ItemDataCast {
                         icon = generateIconUrl(item),
                         location = generateLocation(
                             item.venue.location.lat,
-                            item.venue.location.lng
-                        )
+                            item.venue.location.lng,
+                            item.venue.name
+                        ),
+                        address = generateAddress(item.venue.location.formattedAddress)
                     )
                 )
             }
@@ -37,8 +39,8 @@ class ItemDataCast {
             return url.toString()
         }
 
-        private fun generateLocation(latitude: Double, longitude: Double): Location {
-            val location = Location("")
+        private fun generateLocation(latitude: Double, longitude: Double, name: String): Location {
+            val location = Location(name)
             location.latitude = latitude
             location.longitude = longitude
             return location
@@ -49,6 +51,17 @@ class ItemDataCast {
                 "$distance m"
             else
                 "${distance / 1000} km"
+        }
+
+        private fun generateAddress(formattedAddress: List<String?>): String {
+            var address: String? = null
+            formattedAddress.asReversed().forEach {
+                address = if (address == null)
+                    it
+                else
+                    " $it"
+            }
+            return address!!
         }
     }
 }

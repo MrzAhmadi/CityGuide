@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CityGuid</string>
+  <string name="app_name">CityGuid</string>
   <string name="name">Name</string>
   <string name="type">Type</string>
   <string name="distance">Distance</string>
@@ -14,4 +14,6 @@
   <string name="no_internet_no_cache">No internet available , No data in cache \n
     connect to internet and try again
   </string>
+  <string name="address">Address</string>
+  <string name="no_internet_for_map">No internet for load map</string>
 </resources>

@@ -69,9 +69,13 @@ class MainViewModel(
             locationRepository.getLocationData()!!.observe(activity, Observer {
                 location = it
                 when {
-                    NetworkUtils.isNetworkAvailable(activity) ->
+                    NetworkUtils.isNetworkAvailable(activity) &&
+                            locationRepository.getLocation() == null -> {
+                        locationRequest = "${location!!.latitude},${location!!.longitude}"
                         getListFrom(0)
-                    locationRepository.getLocation() != null -> {
+                    }
+                    !NetworkUtils.isNetworkAvailable(activity) &&
+                            locationRepository.getLocation() != null -> {
                         locationRequest = locationRepository.getLocation()!!
                         activity.showError(
                             activity.getString(R.string.load_data_from_cache),
@@ -79,12 +83,17 @@ class MainViewModel(
                         )
                         getListFrom(0)
                     }
-                    else -> {
+                    !NetworkUtils.isNetworkAvailable(activity) &&
+                            locationRepository.getLocation() == null -> {
                         locationRequest = "${location!!.latitude},${location!!.longitude}"
                         activity.showError(
                             activity.getString(R.string.no_internet_no_cache),
                             true
                         )
+                    }
+                    else -> {
+                        locationRequest = locationRepository.getLocation()!!
+                        getListFrom(0)
                     }
                 }
 

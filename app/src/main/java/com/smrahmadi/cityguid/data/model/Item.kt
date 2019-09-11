@@ -11,5 +11,6 @@ data class Item
     var type: String,
     var icon: String,
     var location: Location,
-    var distance: String
+    var distance: String,
+    var address: String
 ) : Parcelable

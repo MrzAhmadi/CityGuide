@@ -10,9 +10,6 @@ data class Location(
     @field:SerializedName("country")
     val country: String,
 
-    @field:SerializedName("address")
-    val address: String,
-
     @field:SerializedName("labeledLatLngs")
     val labeledLatLngs: List<LabeledLatLngsItem?>,
 

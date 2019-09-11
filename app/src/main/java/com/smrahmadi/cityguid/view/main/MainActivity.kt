@@ -22,6 +22,7 @@ import com.smrahmadi.cityguid.data.repository.LocationRepository
 import com.smrahmadi.cityguid.utils.ListItemDecoration
 import com.smrahmadi.cityguid.utils.longToast
 import com.smrahmadi.cityguid.view.main.adapter.ItemAdapter
+import com.smrahmadi.cityguid.view.place.PlaceActivity
 import com.smrahmadi.cityguid.viewmodel.MainViewModel
 import com.smrahmadi.cityguid.viewmodel.MainViewModel.Companion.PERMISSIONS_REQUEST_LOCATION
 import com.smrahmadi.cityguid.viewmodel.provider.FoursquareViewModelProvider
@@ -142,6 +143,9 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onItemClick(item: Item) {
+        val intent = Intent(this, PlaceActivity::class.java)
+        intent.putExtra(PlaceActivity.ITEM_KEY, item)
+        startActivity(intent)
     }
 
     override fun onRefresh() {
