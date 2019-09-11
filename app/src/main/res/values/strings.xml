@@ -8,4 +8,10 @@
   <string name="require_permissions">Require permissions</string>
   <string name="checking_your_location_n_please_wait">Checking your location \n   please
     wait…</string>
+  <string name="enable_gps">Please enable GPS</string>
+  <string name="no_data_in_cache">There is no internet , No data in cache</string>
+  <string name="load_data_from_cache">No internet available , Load data from cache</string>
+  <string name="no_internet_no_cache">No internet available , No data in cache \n
+    connect to internet and try again
+  </string>
 </resources>

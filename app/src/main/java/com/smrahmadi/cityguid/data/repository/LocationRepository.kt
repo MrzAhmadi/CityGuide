@@ -8,12 +8,14 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.smrahmadi.cityguid.data.local.SharedPreferencesConnector
 
-
-class LocationRepository(var context: Context) : LocationListener {
+class LocationRepository(var context: Context, var spConnector: SharedPreferencesConnector) :
+    LocationListener {
 
     companion object {
-        const val TAG = "LocationRepository"
+        private const val TAG = "LocationRepository"
+        private const val LOCATION_KEY = "location"
     }
 
     var locationManager: LocationManager
@@ -25,7 +27,7 @@ class LocationRepository(var context: Context) : LocationListener {
         try {
             // Request location updates
             locationManager.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER,
+                LocationManager.GPS_PROVIDER,
                 0L,
                 0f,
                 this
@@ -55,5 +57,13 @@ class LocationRepository(var context: Context) : LocationListener {
 
     fun getLocationData(): MutableLiveData<Location?>? {
         return locationData
+    }
+
+    fun getLocation(): String? {
+        return spConnector.readString(LOCATION_KEY, null)
+    }
+
+    fun saveLocation(location: String) {
+        spConnector.writeString(LOCATION_KEY, location)
     }
 }

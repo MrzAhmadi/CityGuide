@@ -9,9 +9,11 @@ import android.widget.AbsListView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
+import com.smrahmadi.cityguid.R
 import com.smrahmadi.cityguid.data.cast.ItemDataCast
 import com.smrahmadi.cityguid.data.repository.FoursquareRepository
 import com.smrahmadi.cityguid.data.repository.LocationRepository
+import com.smrahmadi.cityguid.utils.NetworkUtils
 import com.smrahmadi.cityguid.view.main.MainActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -25,9 +27,10 @@ class MainViewModel(
     companion object {
         const val REQUEST_SIZE = 50
         const val PERMISSIONS_REQUEST_LOCATION = 99
-
+        const val MINIMUM_DISTANCE = 100
     }
 
+    private var isFirstLoad = false
     private var isScrolling = false
     private var isLoading = true
     private var currentItems: Int = 0
@@ -44,7 +47,6 @@ class MainViewModel(
         initInfiniteScroll()
     }
 
-
     fun initLocationPermissions() {
         val permission = android.Manifest.permission.ACCESS_FINE_LOCATION
         val res = activity.checkCallingOrSelfPermission(permission)
@@ -56,44 +58,73 @@ class MainViewModel(
 
     @SuppressLint("MissingPermission")
     fun locationUpdate() {
-        val provider = LocationManager.NETWORK_PROVIDER
-        locationRepository.locationManager.requestLocationUpdates(
-            provider,
-            400,
-            1f,
-            locationRepository
-        )
-        locationRepository.getLocationData()!!.observe(activity, Observer {
-            location = it
-            locationRequest = "${location!!.latitude},${location!!.longitude}"
-            getListFrom(0)
-            activity.showList()
-        })
+        if (isLocationServiceEnabled()) {
+            val provider = LocationManager.NETWORK_PROVIDER
+            locationRepository.locationManager.requestLocationUpdates(
+                provider,
+                400,
+                1f,
+                locationRepository
+            )
+            locationRepository.getLocationData()!!.observe(activity, Observer {
+                location = it
+                when {
+                    NetworkUtils.isNetworkAvailable(activity) ->
+                        getListFrom(0)
+                    locationRepository.getLocation() != null -> {
+                        locationRequest = locationRepository.getLocation()!!
+                        activity.showError(
+                            activity.getString(R.string.load_data_from_cache),
+                            false
+                        )
+                        getListFrom(0)
+                    }
+                    else -> {
+                        locationRequest = "${location!!.latitude},${location!!.longitude}"
+                        activity.showError(
+                            activity.getString(R.string.no_internet_no_cache),
+                            true
+                        )
+                    }
+                }
+
+                activity.showList()
+            })
+        } else {
+            activity.showError(activity.getString(R.string.enable_gps), false)
+            activity.openGpsSettings()
+            activity.finish()
+        }
     }
 
-    fun getList(
-        v: String,
-        limit: Int,
+    private fun isLocationServiceEnabled(): Boolean {
+        return locationRepository.locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+
+    private fun getList(
         offset: Int
     ) {
         foursquareRepository.locations(
             locationRequest,
-            v
-            , limit,
+            REQUEST_SIZE,
             offset
         ).observe(activity, Observer {
-
             if (it.hasException())
-                it.throwable?.message?.let { it1 -> activity.showError(it1) }
+                it.throwable?.message?.let { it1 -> activity.showError(it1, true) }
             else {
-                if (it.data!!.meta.code == 200) {
-                    isLoading = false
-                    val groups = it.data.response.groups[0]
-                    activity.loadList(ItemDataCast.cast(groups!!.items))
-                    totalItems = it.data.response.totalResults
-                    activity.listItemDecoration.setItemCount(totalItems)
+                if (it.data != null) {
+                    if (it.data.meta.code == 200) {
+                        isLoading = false
+                        val groups = it.data.response.groups[0]
+                        activity.loadList(ItemDataCast.cast(groups!!.items))
+                        totalItems = it.data.response.totalResults
+                        activity.listItemDecoration.setItemCount(totalItems)
+                        isFirstLoad = true
+                        locationRepository.saveLocation(locationRequest)
+                    } else
+                        activity.showError(it.data.meta.errorDetail, true)
                 } else
-                    activity.showError(it.data.meta.errorDetail)
+                    activity.showError(activity.getString(R.string.no_data_in_cache), true)
             }
         })
     }
@@ -136,13 +167,19 @@ class MainViewModel(
     }
 
     fun getListFrom(offset: Int) {
+        if (NetworkUtils.isNetworkAvailable(activity) && locationRepository.getLocation() != null) {
+            val locArray = locationRepository.getLocation()!!.split(",")
+            val oldLocation = Location("oldLocation")
+            oldLocation.latitude = locArray[0].toDouble()
+            oldLocation.longitude = locArray[1].toDouble()
+            locationRequest = if (oldLocation.distanceTo(location) > MINIMUM_DISTANCE)
+                "${location!!.latitude},${location!!.longitude}"
+            else
+                locationRepository.getLocation()!!
+        }
         isLoading = true
         getList(
-            "20190910",
-            REQUEST_SIZE,
             offset
         )
     }
-
-
 }

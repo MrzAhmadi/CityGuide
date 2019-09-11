@@ -1,4 +1,4 @@
-package com.smrahmadi.cityguid.helper
+package com.smrahmadi.cityguid.utils
 
 import android.content.Context
 import android.widget.Toast

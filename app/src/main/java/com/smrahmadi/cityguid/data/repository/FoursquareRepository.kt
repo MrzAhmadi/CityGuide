@@ -15,15 +15,15 @@ class FoursquareRepository {
 
 
     companion object {
-        const val TAG = "FoursquareRepository"
+        private const val TAG = "FoursquareRepository"
         //They should be encrypted for real state
-        const val clientId = "K4CZBCZWZMC3CIYA3QEPOOVPIMCU2HIN4DPEN5E4CSFQWCCZ"
-        const val clientSecret = "TOCUUOZFF0A4LEBJDFKL5CMZJ4DIDL4HCZJ3I1TE40023Y3C"
+        private const val clientId = "K4CZBCZWZMC3CIYA3QEPOOVPIMCU2HIN4DPEN5E4CSFQWCCZ"
+        private const val clientSecret = "TOCUUOZFF0A4LEBJDFKL5CMZJ4DIDL4HCZJ3I1TE40023Y3C"
+        private const val v = "20190910"
     }
 
     fun locations(
         ll: String,
-        v: String,
         limit: Int,
         offset: Int
     ): LiveData<DataWrapper<Data>> {

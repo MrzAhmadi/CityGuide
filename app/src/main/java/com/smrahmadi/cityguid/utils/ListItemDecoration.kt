@@ -1,4 +1,4 @@
-package com.smrahmadi.cityguid.helper
+package com.smrahmadi.cityguid.utils
 
 import android.graphics.Rect
 import android.view.View

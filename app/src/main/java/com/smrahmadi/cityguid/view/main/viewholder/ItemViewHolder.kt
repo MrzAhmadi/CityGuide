@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.smrahmadi.cityguid.R
 import com.smrahmadi.cityguid.data.model.Item
-import com.smrahmadi.cityguid.helper.GlideApp
+import com.smrahmadi.cityguid.utils.GlideApp
 import com.smrahmadi.cityguid.view.main.adapter.ItemAdapter
 import kotlinx.android.synthetic.main.item_location.view.*
 
