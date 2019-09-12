@@ -144,8 +144,12 @@ class MainViewModel(
                         locationRepository.saveLocation(locationRequest)
                     } else
                         activity.showError(it.data.meta.errorDetail, true)
-                } else
-                    activity.showError(activity.getString(R.string.no_data_in_cache), true)
+                } else {
+                    isLoading = true
+                    getList(
+                        offset
+                    )
+                }
             }
         })
     }

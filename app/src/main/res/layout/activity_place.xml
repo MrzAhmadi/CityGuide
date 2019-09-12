@@ -95,6 +95,7 @@
           android:layout_marginStart="8dp"
           android:layout_marginEnd="8dp"
           android:text="@string/address"
+          android:textDirection="ltr"
           android:textSize="@dimen/descriptionTextSize"
           android:textColor="@color/colorTextSecondary"
           app:layout_constraintBottom_toBottomOf="parent"
