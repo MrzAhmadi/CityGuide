@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.smrahmadi.cityguid.R
 import com.smrahmadi.cityguid.data.cast.ItemDataCast
+import com.smrahmadi.cityguid.data.remote.ApiClient
 import com.smrahmadi.cityguid.data.repository.FoursquareRepository
 import com.smrahmadi.cityguid.data.repository.LocationRepository
 import com.smrahmadi.cityguid.utils.NetworkUtils
@@ -188,10 +189,12 @@ class MainViewModel(
 
     fun getListFrom(offset: Int) {
         if (NetworkUtils.isNetworkAvailable(activity) && locationRepository.getLocation() != null) {
-            locationRequest = if (oldLocationGenerator().distanceTo(location) > MINIMUM_DISTANCE)
-                "${location!!.latitude},${location!!.longitude}"
-            else
-                locationRepository.getLocation()!!
+            if (oldLocationGenerator().distanceTo(location) > MINIMUM_DISTANCE)
+                locationRequest = "${location!!.latitude},${location!!.longitude}"
+            else {
+                locationRequest = locationRepository.getLocation()!!
+                ApiClient.setForceCache(true)
+            }
         }
         isLoading = true
         getList(
