@@ -30,7 +30,7 @@ class MainViewModel(
         const val MINIMUM_DISTANCE = 100
     }
 
-    private var isFirstLoad = false
+    private var isFirstLoad = true
     private var isScrolling = false
     private var isLoading = true
     private var currentItems: Int = 0
@@ -75,7 +75,8 @@ class MainViewModel(
                         getListFrom(0)
                     }
                     !NetworkUtils.isNetworkAvailable(activity) &&
-                            locationRepository.getLocation() != null -> {
+                            locationRepository.getLocation() != null &&
+                            isFirstLoad -> {
                         locationRequest = locationRepository.getLocation()!!
                         activity.showError(
                             activity.getString(R.string.load_data_from_cache),
@@ -84,16 +85,26 @@ class MainViewModel(
                         getListFrom(0)
                     }
                     !NetworkUtils.isNetworkAvailable(activity) &&
-                            locationRepository.getLocation() == null -> {
+                            locationRepository.getLocation() == null &&
+                            isFirstLoad -> {
                         locationRequest = "${location!!.latitude},${location!!.longitude}"
                         activity.showError(
                             activity.getString(R.string.no_internet_no_cache),
                             true
                         )
+
                     }
                     else -> {
-                        locationRequest = locationRepository.getLocation()!!
-                        getListFrom(0)
+                        if (oldLocationGenerator().distanceTo(location) < MINIMUM_DISTANCE) {
+                            locationRequest = locationRepository.getLocation()!!
+                            //location not changed load from cache
+                            if (isFirstLoad)
+                                getListFrom(0)
+                        } else {
+                            //location changed , loading fresh data
+                            locationRequest = "${location!!.latitude},${location!!.longitude}"
+                            getListFrom(0)
+                        }
                     }
                 }
 
@@ -128,7 +139,7 @@ class MainViewModel(
                         activity.loadList(ItemDataCast.cast(groups!!.items))
                         totalItems = it.data.response.totalResults
                         activity.listItemDecoration.setItemCount(totalItems)
-                        isFirstLoad = true
+                        isFirstLoad = false
                         locationRepository.saveLocation(locationRequest)
                     } else
                         activity.showError(it.data.meta.errorDetail, true)
@@ -177,11 +188,7 @@ class MainViewModel(
 
     fun getListFrom(offset: Int) {
         if (NetworkUtils.isNetworkAvailable(activity) && locationRepository.getLocation() != null) {
-            val locArray = locationRepository.getLocation()!!.split(",")
-            val oldLocation = Location("oldLocation")
-            oldLocation.latitude = locArray[0].toDouble()
-            oldLocation.longitude = locArray[1].toDouble()
-            locationRequest = if (oldLocation.distanceTo(location) > MINIMUM_DISTANCE)
+            locationRequest = if (oldLocationGenerator().distanceTo(location) > MINIMUM_DISTANCE)
                 "${location!!.latitude},${location!!.longitude}"
             else
                 locationRepository.getLocation()!!
@@ -190,5 +197,17 @@ class MainViewModel(
         getList(
             offset
         )
+    }
+
+    private fun oldLocationGenerator(): Location {
+        val oldLocation = Location("oldLocation")
+        val locArray = locationRepository.getLocation()!!.split(",")
+        oldLocation.latitude = locArray[0].toDouble()
+        oldLocation.longitude = locArray[1].toDouble()
+        return oldLocation
+    }
+
+    fun locationListenerTurnOff() {
+        locationRepository.locationManager.removeUpdates(locationRepository)
     }
 }

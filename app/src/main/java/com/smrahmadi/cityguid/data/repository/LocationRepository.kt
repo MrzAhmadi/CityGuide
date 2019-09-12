@@ -10,12 +10,18 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.smrahmadi.cityguid.data.local.SharedPreferencesConnector
 
-class LocationRepository(var context: Context, var spConnector: SharedPreferencesConnector) :
+class LocationRepository(
+    var context: Context,
+    private var spConnector: SharedPreferencesConnector
+) :
     LocationListener {
 
     companion object {
         private const val TAG = "LocationRepository"
         private const val LOCATION_KEY = "location"
+
+        private const val MINIMUM_TIME_CHANGED = 30L
+        private const val MINIMUM_DISTANCE_CHANGED = 100f
     }
 
     var locationManager: LocationManager
@@ -28,8 +34,8 @@ class LocationRepository(var context: Context, var spConnector: SharedPreference
             // Request location updates
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
-                0L,
-                0f,
+                MINIMUM_TIME_CHANGED,
+                MINIMUM_DISTANCE_CHANGED,
                 this
             )
         } catch (ex: SecurityException) {
@@ -40,7 +46,6 @@ class LocationRepository(var context: Context, var spConnector: SharedPreference
     override fun onLocationChanged(p0: Location?) {
         Log.v(TAG, "onLocationChanged ${p0!!.latitude}  ||| ${p0.longitude}")
         locationData!!.postValue(p0)
-        locationManager.removeUpdates(this)
     }
 
     override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {

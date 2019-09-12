@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.StrictMode
+import android.text.TextUtils
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
@@ -104,8 +105,9 @@ class MainActivity : AppCompatActivity(),
         adapter.addItems(items)
     }
 
-    fun showError(errorMessage: String, stopLoading: Boolean) {
-        longToast(errorMessage)
+    fun showError(errorMessage: String?, stopLoading: Boolean) {
+        if (!TextUtils.isEmpty(errorMessage))
+            longToast(errorMessage!!)
         if (stopLoading) {
             adapter.removeLoading()
             refreshLayout.isRefreshing = false
@@ -151,5 +153,10 @@ class MainActivity : AppCompatActivity(),
     override fun onRefresh() {
         adapter.clearList()
         viewModel.getListFrom(0)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.locationListenerTurnOff()
     }
 }
