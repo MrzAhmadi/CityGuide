@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name">CityGuid</string>
+  <string name="app_name">CityGuide</string>
   <string name="name">Name</string>
   <string name="type">Type</string>
   <string name="distance">Distance</string>
