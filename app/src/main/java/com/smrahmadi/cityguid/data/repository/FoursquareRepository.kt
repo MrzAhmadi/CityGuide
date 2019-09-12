@@ -17,8 +17,8 @@ class FoursquareRepository {
     companion object {
         private const val TAG = "FoursquareRepository"
         //They should be encrypted for real state
-        private const val clientId = "K4CZBCZWZMC3CIYA3QEPOOVPIMCU2HIN4DPEN5E4CSFQWCCZ"
-        private const val clientSecret = "TOCUUOZFF0A4LEBJDFKL5CMZJ4DIDL4HCZJ3I1TE40023Y3C"
+        private const val clientId = "GPJINAM3K0Q2PAM1Q4TFAORXPQVUIVLZH2KQ3BA50YATOESY"
+        private const val clientSecret = "JAABKKVTYYMSS2OLKTVYTVFVG4DUY4ZCFRKU1OATPOMRCPHP"
         private const val v = "20190910"
     }
 
